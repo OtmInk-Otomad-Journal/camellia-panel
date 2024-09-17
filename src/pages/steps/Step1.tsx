@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { Space, Button, message, Select, Divider, Typography, DatePicker, InputNumber, Flex, theme } from "antd";
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { a11yDark, a11yLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import DarkValue from '/src/common/darkvalue'
 import dayjs from 'dayjs';
 
 const { RangePicker } = DatePicker;
@@ -7,6 +10,8 @@ const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY-MM-DD';
 
 const { Title, Paragraph } = Typography;
+
+const logs = "巴卡"
 
 const SendButton = (script) => {
     const [buttonState, setButtonState] = useState({
@@ -30,15 +35,42 @@ const SendButton = (script) => {
     );
   };
 
-const RunningBox = () => {
-    const { token: { colorBgLayout, borderRadiusLG } } = theme.useToken();
+const LogBox: React.FC<PropsWithChildren> = ({ children }) => {
+    const { token: { colorBgLayout } } = theme.useToken();
     return <div style={{
-        minHeight: 200,
+        height: 500,
         width: '100%',
-        borderRadius: borderRadiusLG,
-        padding: 10,
+        borderRadius: 8,
+        overflowY: 'scroll',
+        boxSizing: 'border-box',
         background: colorBgLayout
-    }}></div>
+    }}>{children}</div>
+}
+
+const RunningBox = () => {
+    const { token: { colorBgLayout, borderRadiusLG, colorBgElevated } } = theme.useToken();
+    return <LogBox>
+        <DarkValue.Consumer>
+            {value => <SyntaxHighlighter
+                PreTag="div"
+                CodeTag="span"
+                lineNumberStyle={{
+                    background: colorBgElevated,
+                    marginRight: '0.5em'
+                }}
+                customStyle={{
+                    overflowX: 'unset',
+                    padding: 'none',
+                    background: 'none',
+                    fontFamily: "Consolas",
+                }}
+                language="accesslog"
+                showLineNumbers={true}
+                style={value ? a11yDark : a11yLight}>
+                {logs}
+            </SyntaxHighlighter>}
+        </DarkValue.Consumer>
+    </LogBox>
 }
 
 function ComText({children}){

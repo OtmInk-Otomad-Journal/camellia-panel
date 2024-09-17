@@ -5,6 +5,8 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import SideMenu from './components/SideMenu.tsx';
 
+import DarkValue from './common/darkvalue'
+
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router/router.tsx";
 
@@ -33,30 +35,31 @@ import './index.css';
 
 const App: React.FC<PropsWithChildren<{}>> = () => {
 
-  // const navigate = useNavigate();
   // 动态检测暗黑模式
   const queryDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
-  const [themeStyle, setThemeStyle] = useState(queryDarkMode.matches ? true : false);
+  const [darkStyle, setDarkStyle] = useState(queryDarkMode.matches ? true : false);
   useEffect(() => {
       queryDarkMode.addEventListener("change", () => {
-          setThemeStyle(queryDarkMode.matches ? true : false)
+          setDarkStyle(queryDarkMode.matches ? true : false)
       })
   })
 
   return (
-    <ConfigProvider theme = {{ algorithm: themeStyle ? theme.darkAlgorithm : theme.defaultAlgorithm }}>
-      <Layout style={{ minHeight: '100vh' }}>
-        <Sider breakpoint="lg" collapsedWidth="0">
-          <SideMenu />
-        </Sider>
-        <Layout style={{ height: "100vh" }}>
-          <Content style={{ margin: '0 16px' }}>
-            <OutBox>
-              <Outlet />
-            </OutBox>
-          </Content>
+    <ConfigProvider theme = {{ algorithm: darkStyle ? theme.darkAlgorithm : theme.defaultAlgorithm }}>
+      <DarkValue.Provider value={darkStyle}>
+        <Layout style={{ minHeight: '100vh' }}>
+          <Sider breakpoint="lg" collapsedWidth="0">
+            <SideMenu />
+          </Sider>
+          <Layout style={{ height: "100vh" }}>
+            <Content style={{ margin: '0 16px' }}>
+              <OutBox>
+                <Outlet />
+              </OutBox>
+            </Content>
+          </Layout>
         </Layout>
-      </Layout>
+      </DarkValue.Provider>
     </ConfigProvider>
   );
 };
