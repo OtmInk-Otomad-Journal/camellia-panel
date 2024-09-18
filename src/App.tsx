@@ -1,4 +1,4 @@
-import { ConfigProvider, Layout, theme  } from 'antd';
+import { ConfigProvider, Layout, theme, message  } from 'antd';
 import { MenuProps, App as AntdApp } from 'antd';
 import React, { PropsWithChildren, useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -52,7 +52,10 @@ const App: React.FC<PropsWithChildren<{}>> = () => {
             <SideMenu />
           </Sider>
           <Layout style={{ height: "100vh" }}>
-            <Content style={{ margin: '0 16px' }}>
+            <Content style={{
+              margin: '0 16px',
+              overflowY: "scroll",
+            }}>
               <OutBox>
                 <Outlet />
               </OutBox>

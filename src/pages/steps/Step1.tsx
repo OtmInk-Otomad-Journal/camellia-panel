@@ -1,77 +1,44 @@
 import { useState } from 'react';
 import { Space, Button, message, Select, Divider, Typography, DatePicker, InputNumber, Flex, theme } from "antd";
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { a11yDark, a11yLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import DarkValue from '/src/common/darkvalue'
 import dayjs from 'dayjs';
+import LogBox from '../../components/LogBox';
+import get from '../../common/api'
+import { address, port } from '../../common/config';
 
 const { RangePicker } = DatePicker;
 
-const dateFormat = 'YYYY-MM-DD';
-
 const { Title, Paragraph } = Typography;
 
-const logs = "巴卡"
-
-const SendButton = (script) => {
+const SendButton = ({ url }) => {
+    const [messageApi, contextHolder] = message.useMessage();
     const [buttonState, setButtonState] = useState({
         danger: false,
-        text: "开始获取"});
+        text: "开始 / 继续获取"});
 
     const toggleDanger = () => {
+        if( buttonState.danger ){
+            get(`${address}:${port}/backend/get-data/stop`)()
+                .then( _ => { messageApi.success("已终止进程") })
+                .catch( _ => {
+                    { messageApi.error("终止线程时遇到了异常") }
+            })
+        }
         setButtonState(prevState => ({
             danger: !prevState.danger,
-            text: prevState.danger ? '开始获取' : '停止获取',
+            text: prevState.danger ? '开始 / 继续获取' : '终止线程',
         }));
     };
 
     return (
       <>
-        {buttonState.danger && <RunningBox />}
+        {contextHolder}
+        {buttonState.danger && <LogBox url={url}/>}
         <Button style={{marginTop: 12}} type="primary" onClick={toggleDanger} danger={buttonState.danger}>
             {buttonState.text}
         </Button>
       </>
     );
   };
-
-const LogBox: React.FC<PropsWithChildren> = ({ children }) => {
-    const { token: { colorBgLayout } } = theme.useToken();
-    return <div style={{
-        height: 500,
-        width: '100%',
-        borderRadius: 8,
-        overflowY: 'scroll',
-        boxSizing: 'border-box',
-        background: colorBgLayout
-    }}>{children}</div>
-}
-
-const RunningBox = () => {
-    const { token: { colorBgLayout, borderRadiusLG, colorBgElevated } } = theme.useToken();
-    return <LogBox>
-        <DarkValue.Consumer>
-            {value => <SyntaxHighlighter
-                PreTag="div"
-                CodeTag="span"
-                lineNumberStyle={{
-                    background: colorBgElevated,
-                    marginRight: '0.5em'
-                }}
-                customStyle={{
-                    overflowX: 'unset',
-                    padding: 'none',
-                    background: 'none',
-                    fontFamily: "Consolas",
-                }}
-                language="accesslog"
-                showLineNumbers={true}
-                style={value ? a11yDark : a11yLight}>
-                {logs}
-            </SyntaxHighlighter>}
-        </DarkValue.Consumer>
-    </LogBox>
-}
 
 function ComText({children}){
     return <span style={{
@@ -149,6 +116,6 @@ export default function MainPage() {
         <Space>
         </Space>
         <Divider orientation="left">运行</Divider>
-        <SendButton />
+        <SendButton url={`${address}:${port}/backend/get-data`} />
     </>
 }

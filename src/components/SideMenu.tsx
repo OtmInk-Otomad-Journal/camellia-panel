@@ -17,22 +17,26 @@ const items = [
         },
         {
           key: '/step2',
-          label: '上传 Pick Up 数据',
+          label: '审核 / 编辑数据',
         },
         {
           key: '/step3',
-          label: '筛选 Pick Up 数据',
+          label: '上传 Pick Up 数据',
         },
         {
           key: '/step4',
-          label: '小日历',
+          label: '筛选 Pick Up 数据',
         },
         {
           key: '/step5',
-          label: '启动渲染',
+          label: '小日历',
         },
         {
           key: '/step6',
+          label: '启动渲染',
+        },
+        {
+          key: '/step7',
           label: '获取结果',
         }
       ],
