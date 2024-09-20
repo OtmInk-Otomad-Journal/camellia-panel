@@ -24,57 +24,14 @@ import {
   Row,
   Col,
   FormListFieldData,
+  Card,
 } from "antd";
 import { CloseOutlined, ArrowRightOutlined } from "@ant-design/icons";
-import get from "../../common/api";
+import { get, post } from "../../common/api";
 import { address, port } from "../../common/config";
 import { JSX } from "react/jsx-runtime";
 
-type pullData = {
-  ranking: string;
-  score: string;
-  aid: string;
-  bvid: string;
-  cid: string;
-  title: string;
-  uploader: string;
-  uid: string;
-  copyright: string;
-  play: string;
-  like: string;
-  coin: string;
-  star: string;
-  pubtime: string;
-  adjust_scale: string;
-  prescore: string;
-  part: string;
-  duration: string;
-  start_time: string;
-  full_time: string;
-  web_prefix: string;
-  video_src: string;
-  cover_src: string;
-  avatar_src: string;
-  danmaku_src: string;
-  light_color: string;
-  dark_color: string;
-  score_add: string;
-};
-
 const { Title, Paragraph } = Typography;
-
-function ComText({ children }) {
-  return (
-    <span
-      style={{
-        display: "inline-block",
-        minWidth: "8em",
-      }}
-    >
-      {children}
-    </span>
-  );
-}
 
 /**
  * 动态获取表单值，会因值变化而变化
@@ -195,6 +152,9 @@ const PanelInside = ({ field }) => {
         <InputNumber />
       </Form.Item> */}
       <Divider orientation="left">分数</Divider>
+      <Form.Item label="排名" name={[field.name, "ranking"]}>
+        <InputNumber addonBefore="#" />
+      </Form.Item>
       <Row>
         <Col>
           <Row>
@@ -218,7 +178,7 @@ const PanelInside = ({ field }) => {
         <Col>
           <Row align="middle" style={{ height: "100%" }}>
             <Form.Item label="最终分数" name={[field.name, "score"]}>
-              <Input />
+              <InputNumber addonAfter="POINTS" />
             </Form.Item>
           </Row>
         </Col>
@@ -241,8 +201,6 @@ const PanelInside = ({ field }) => {
 };
 
 const ItemList = ({ field, remove }) => {
-  const form = Form.useFormInstance();
-
   return (
     <>
       <Collapse
@@ -260,7 +218,7 @@ const ItemList = ({ field, remove }) => {
                     minWidth: "2em",
                   }}
                 >
-                  {field.name + 1}
+                  {checkValue(field, "ranking")}
                 </span>
                 {checkValue(field, "title")}
                 <Button
@@ -283,42 +241,132 @@ const ItemList = ({ field, remove }) => {
     </>
   );
 };
+
 const DataBox = () => {
   const [form] = Form.useForm();
 
-  const [listData, setListData] = useState<[pullData]>([]);
-  form.setFieldValue("items", listData);
+  // const [listData, setListData] = useState<[pullData]>([]);
+  // form.setFieldValue("items", listData);
+
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    get(`${address}:${port}/backend/pull-data`)().then((data) => {
-      setListData(data);
+    get("/backend/pull-data")().then((data) => {
+      // setListData(data);
+      form.setFieldValue("items", data);
+      setLoaded(true);
     });
   }, []);
 
   return (
     <>
-      <Form form={form}>
-        <Form.List name="items">
-          {(fields, { add, remove }) => (
-            <Space direction="vertical" style={{ width: "100%" }}>
-              {fields.map((field) => {
-                if (field.key < 10) {
-                  return (
-                    <ItemList key={field.key} field={field} remove={remove} />
-                  );
-                }
-              })}
-            </Space>
-          )}
-        </Form.List>
-        <Form.Item noStyle shouldUpdate>
-          {() => (
-            <Typography>
-              <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
-            </Typography>
-          )}
-        </Form.Item>
-      </Form>
+      {loaded && (
+        <Form form={form}>
+          <Form.Item>
+            <ResortData></ResortData>
+          </Form.Item>
+          <Form.List name="items">
+            {(fields, { add, remove }) => (
+              <Space direction="vertical" style={{ width: "100%" }}>
+                {fields.map((field) => {
+                  if (field.key < 100) {
+                    return (
+                      <ItemList key={field.key} field={field} remove={remove} />
+                    );
+                  }
+                })}
+              </Space>
+            )}
+          </Form.List>
+          {/* <Form.Item noStyle shouldUpdate>
+            {() => (
+              <Typography>
+                <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
+              </Typography>
+            )}
+          </Form.Item> */}
+        </Form>
+      )}
+    </>
+  );
+};
+
+const ResortData = () => {
+  const [loadings, setLoadings] = useState<boolean[]>([false, false]);
+
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const form = Form.useFormInstance();
+
+  const enterLoading = (index: number) => {
+    setLoadings((prevLoadings) => {
+      const newLoadings = [...prevLoadings];
+      newLoadings[index] = true;
+      return newLoadings;
+    });
+  };
+  const exitLoading = (index: number) => {
+    setLoadings((prevLoadings) => {
+      const newLoadings = [...prevLoadings];
+      newLoadings[index] = false;
+      return newLoadings;
+    });
+  };
+  const resort = (index: number) => {
+    // 因为加载太快了，为了展现动画效果，人为延长了时间
+    enterLoading(index);
+    setTimeout(() => {
+      const data: [] = form.getFieldValue("items");
+      data.sort((a, b) => {
+        return b.score - a.score;
+      });
+      data.map((item, index) => {
+        item.ranking = index + 1;
+      });
+      form.setFieldValue("items", data);
+      exitLoading(index);
+    }, 800);
+  };
+  const sendData = (index: number) => {
+    enterLoading(index);
+    setTimeout(() => {
+      const data: [] = form.getFieldValue("items");
+      post("/backend/save-data", data)()
+        .then((_) => {
+          messageApi.success("已提交数据");
+          exitLoading(index);
+        })
+        .catch((_) => {
+          {
+            messageApi.error("提交数据时遇到了异常");
+            exitLoading(index);
+          }
+        });
+    }, 800);
+  };
+  return (
+    <>
+      {contextHolder}
+      <Space size="middle">
+        <Button
+          type="primary"
+          onClick={() => {
+            sendData(0);
+          }}
+          loading={loadings[0]}
+        >
+          上传 / 保存数据
+        </Button>
+        <Button
+          type="primary"
+          onClick={() => {
+            resort(1);
+          }}
+          loading={loadings[1]}
+        >
+          重新排序
+        </Button>
+      </Space>
     </>
   );
 };
@@ -328,11 +376,12 @@ export default function MainPage() {
     <>
       <Title level={2}>审核 / 编辑数据</Title>
       <Paragraph>获取数据后，可以在这里审核并编辑数据。</Paragraph>
-      <Divider orientation="left">数据列表</Divider>
+      <Divider orientation="left">小工具</Divider>
+      <Card>待添加</Card>
+      <Divider orientation="left">数据处理</Divider>
       <DataBox />
       <Space></Space>
-      <Divider orientation="left">数据提交</Divider>
-      {/* <SendButton url={`${address}:${port}/backend/get-data`} /> */}
+      {/* <Divider orientation="left">数据提交</Divider> */}
     </>
   );
 }

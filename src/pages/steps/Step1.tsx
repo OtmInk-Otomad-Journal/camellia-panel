@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { useState } from "react";
 import {
   Space,
@@ -13,8 +14,7 @@ import {
 } from "antd";
 import dayjs from "dayjs";
 import LogBox from "../../components/LogBox";
-import get from "../../common/api";
-import { address, port } from "../../common/config";
+import { get } from "../../common/api";
 
 const { RangePicker } = DatePicker;
 
@@ -29,7 +29,7 @@ const SendButton = ({ url }) => {
 
   const toggleDanger = () => {
     if (buttonState.danger) {
-      get(`${address}:${port}/backend/get-data/stop`)()
+      get("/backend/get-data/stop")()
         .then((_) => {
           messageApi.success("已终止进程");
         })
@@ -147,7 +147,7 @@ export default function MainPage() {
       </Space>
       <Space></Space>
       <Divider orientation="left">运行</Divider>
-      <SendButton url={`${address}:${port}/backend/get-data`} />
+      <SendButton url="/backend/get-data" />
     </>
   );
 }
