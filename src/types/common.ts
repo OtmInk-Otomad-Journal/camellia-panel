@@ -1,4 +1,4 @@
-type pullData = {
+export type pullData = {
   ranking: string;
   score: string;
   aid: string;
@@ -27,4 +27,12 @@ type pullData = {
   light_color: string;
   dark_color: string;
   score_add: string;
+};
+
+export type pickData = {
+  status: boolean;
+  aid: string | number;
+  reason: string;
+  picker: string;
+  activity: string;
 };

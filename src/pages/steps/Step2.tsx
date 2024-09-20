@@ -26,10 +26,8 @@ import {
   FormListFieldData,
   Card,
 } from "antd";
-import { CloseOutlined, ArrowRightOutlined } from "@ant-design/icons";
+import { UploadOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import { get, post } from "../../common/api";
-import { address, port } from "../../common/config";
-import { JSX } from "react/jsx-runtime";
 
 const { Title, Paragraph } = Typography;
 
@@ -355,6 +353,7 @@ const ResortData = () => {
           }}
           loading={loadings[0]}
         >
+          <UploadOutlined />
           上传 / 保存数据
         </Button>
         <Button
@@ -371,13 +370,113 @@ const ResortData = () => {
   );
 };
 
+const MathSVG = () => (
+  <math
+    style={{ fontSize: "2em" }}
+    xmlns="http://www.w3.org/1998/Math/MathML"
+    display="block"
+  >
+    <mi>f</mi>
+    <mo stretchy="false">(</mo>
+    <mi>x</mi>
+    <mo stretchy="false">)</mo>
+    <mo>=</mo>
+    <mn>1</mn>
+    <mo>+</mo>
+    <mfrac>
+      <mrow>
+        <mi>l</mi>
+        <mi>g</mi>
+        <mo stretchy="false">(</mo>
+        <mn>1</mn>
+        <mo>+</mo>
+        <mi>x</mi>
+        <mo stretchy="false">)</mo>
+      </mrow>
+      <mn>10</mn>
+    </mfrac>
+  </math>
+);
+
+const ComputeTool = () => {
+  const [form] = Form.useForm();
+
+  const computeFunc = (num: number) => {
+    return 1 + Math.log10(1 + num) / 10;
+  };
+  const computeScore = () => {
+    let score = 0;
+    const items = form.getFieldValue(["items"]);
+    for (let i = 0; i < items.length; i++) {
+      score += items[i].points;
+    }
+
+    form.setFieldValue(["items", "total"], computeFunc(score));
+  };
+
+  return (
+    <>
+      <Form form={form} initialValues={{ list: [{}] }}>
+        <Card title="额外分数计算">
+          <Form.List name="items">
+            {(fields, { add, remove }) => (
+              <>
+                <Row gutter={24} align="middle">
+                  <Col style={{ marginRight: "2em" }}>
+                    <MathSVG />
+                  </Col>
+                  <Col>
+                    {fields.map((field) => (
+                      <Form.Item
+                        key={field.key}
+                        name={[field.name, "points"]}
+                        label="分数"
+                      >
+                        <InputNumber onChange={computeScore} />
+                      </Form.Item>
+                    ))}
+                    <Button type="dashed" onClick={() => add()} block>
+                      + 添加项目
+                    </Button>
+                  </Col>
+                  <Col>
+                    <Row
+                      align="middle"
+                      justify="center"
+                      style={{ height: "100%" }}
+                    >
+                      <ArrowRightOutlined
+                        style={{ fontSize: "3em", margin: "0 0.25em" }}
+                      />
+                    </Row>
+                  </Col>
+                  <Col>
+                    <Form.Item name="total" label="计算得分">
+                      <Input onChange={computeScore} />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </>
+            )}
+          </Form.List>
+        </Card>
+      </Form>
+    </>
+  );
+};
+
 export default function MainPage() {
   return (
     <>
       <Title level={2}>审核 / 编辑数据</Title>
-      <Paragraph>获取数据后，可以在这里审核并编辑数据。</Paragraph>
+      <Paragraph>
+        获取数据后，可以在这里审核并编辑数据；默认显示前 100 个。
+      </Paragraph>
+      <Paragraph>
+        编辑后的数据不会自动排序与保存，只有在点击相应按钮后才会执行相应操作。
+      </Paragraph>
       <Divider orientation="left">小工具</Divider>
-      <Card>待添加</Card>
+      <ComputeTool />
       <Divider orientation="left">数据处理</Divider>
       <DataBox />
       <Space></Space>

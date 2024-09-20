@@ -10,12 +10,14 @@
   },
   "dependencies": {
     "@types/axios": "^0.9.36",
+    "@types/react-latex": "^2.0.3",
     "@types/react-syntax-highlighter": "^15.5.13",
     "antd": "^5.20.6",
     "axios": "^1.7.7",
     "prettier": "^3.3.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-latex": "^2.0.0",
     "react-router-dom": "^6.26.2",
     "react-syntax-highlighter": "^15.5.0"
   },
