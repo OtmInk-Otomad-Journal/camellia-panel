@@ -10,10 +10,13 @@
   },
   "dependencies": {
     "@types/axios": "^0.9.36",
+    "@types/jsonp": "^0.2.3",
     "@types/react-latex": "^2.0.3",
     "@types/react-syntax-highlighter": "^15.5.13",
     "antd": "^5.20.6",
+    "antd-img-crop": "^4.23.0",
     "axios": "^1.7.7",
+    "jsonp": "^0.2.1",
     "prettier": "^3.3.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -26,6 +29,7 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "globals": "^15.9.0",
+    "sass-embedded": "^1.79.3",
     "typescript": "^5.5.3",
     "vite": "^5.4.1"
   }

@@ -1,0 +1,150 @@
+:root {
+  font-size: 12px;
+}
+
+@mixin card {
+  position: relative;
+  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.18);
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 1);
+  // border: 1px solid rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 10;
+}
+
+@mixin acrylic {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.75);
+  z-index: 10;
+  background-blend-mode: overlay, normal;
+  backdrop-filter: blur(12px);
+
+  // Acrylic Noise
+  &::after {
+    content: "";
+    position: absolute;
+    height: 100%;
+    top: 0;
+    right: 0;
+    left: 0;
+    background-image: url(noise_asset.png);
+    z-index: -1;
+    opacity: 0.02;
+    border-radius: inherit;
+  }
+}
+
+.extra-single {
+  @include card;
+  @include acrylic;
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  width: 100%;
+  max-height: 200px;
+  padding: 1rem;
+  border-radius: 12px;
+  // background-image: linear-gradient(90deg, #fff 33%, transparent);
+  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.18);
+}
+
+.cover-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(90deg, rgb(233, 233, 233), transparent);
+}
+
+.rightI {
+  display: flex;
+  flex-direction: row;
+  margin-left: 1rem;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.ca-time {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.753);
+  box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.18);
+  border-radius: 0.5rem;
+  min-width: 12rem;
+  //   overflow: hidden;
+}
+
+.ca-date-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.ca-date {
+  display: flex;
+  align-items: last baseline;
+  justify-content: center;
+  // padding-bottom: 0.8rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 3rem;
+  font-weight: bolder;
+
+  m {
+    font-size: 1rem;
+  }
+}
+
+.ca-progress {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  width: 100%;
+  font-weight: bolder;
+  height: 28px;
+}
+
+.ca-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-overflow: ellipsis;
+  // overflow: hidden;
+  white-space: nowrap;
+}
+
+.ca-subtitle {
+  font-size: 1.2rem;
+  text-overflow: ellipsis;
+  //   overflow: hidden;
+  white-space: nowrap;
+}
+
+.ca-title-box {
+  height: 100%;
+  flex-grow: 1;
+  display: flex;
+  //   overflow: hidden;
+  flex-direction: column;
+  margin-left: 1.5rem;
+  justify-content: center;
+}
+
+.cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  object-fit: cover;
+  flex-shrink: 0;
+  border-radius: 0.5rem;
+  opacity: 0.65;
+}

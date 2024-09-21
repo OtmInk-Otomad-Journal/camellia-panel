@@ -1,5 +1,6 @@
 import axios from "axios";
 import { address, port } from "../common/config";
+import jsonp from "jsonp";
 
 type APIWrapper<T> = {
   code: number;

@@ -267,7 +267,7 @@ const DataBox = () => {
             {(fields, { add, remove }) => (
               <Space direction="vertical" style={{ width: "100%" }}>
                 {fields.map((field) => {
-                  if (field.key < 100) {
+                  if (field.name < 100) {
                     return (
                       <ItemList key={field.key} field={field} remove={remove} />
                     );
