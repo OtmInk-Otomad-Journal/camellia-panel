@@ -10,6 +10,8 @@ import Step3 from "../pages/steps/Step3";
 import Step4 from "../pages/steps/Step4";
 import Step5 from "../pages/steps/Step5";
 import Step6 from "../pages/steps/Step6";
+import Step7 from "../pages/steps/Step7";
+import Step8 from "../pages/steps/Step8";
 
 export const router = createBrowserRouter([
   {
@@ -52,6 +54,14 @@ export const router = createBrowserRouter([
       {
         path: "/step6",
         element: <Step6 />,
+      },
+      {
+        path: "/step7",
+        element: <Step7 />,
+      },
+      {
+        path: "/step8",
+        element: <Step8 />,
       },
     ],
   },

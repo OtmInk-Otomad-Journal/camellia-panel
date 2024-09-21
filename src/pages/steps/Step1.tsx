@@ -11,10 +11,13 @@ import {
   InputNumber,
   Flex,
   theme,
+  Form,
 } from "antd";
 import dayjs from "dayjs";
 import LogBox from "../../components/LogBox";
-import { get } from "../../common/api";
+import { get, post } from "../../common/api";
+
+import { UploadOutlined } from "@ant-design/icons";
 
 const { RangePicker } = DatePicker;
 
@@ -61,91 +64,82 @@ const SendButton = ({ url }) => {
   );
 };
 
-function ComText({ children }) {
-  return (
-    <span
-      style={{
-        display: "inline-block",
-        minWidth: "8em",
-      }}
-    >
-      {children}
-    </span>
-  );
-}
-
 export default function MainPage() {
   const date = new Date();
-
+  const [messageApi, contextHolder] = message.useMessage();
+  const [loading, setLoading] = useState(false);
   return (
     <>
+      {contextHolder}
       <Title level={2}>数据获取</Title>
       <Paragraph>获取本次周刊的数据。</Paragraph>
       <Divider orientation="left">参数设置</Divider>
-      <Space direction="vertical">
-        <Flex vertical={false} align="center">
-          <ComText>获取时间范围：</ComText>
+      <Form
+        onFinish={(values) => {
+          setLoading(true);
+          post("/backend/save-data-config", values)()
+            .then((_) => {
+              messageApi.success("已提交数据");
+              setLoading(false);
+            })
+            .catch((_) => {
+              {
+                messageApi.error("提交数据时遇到了异常");
+                setLoading(false);
+              }
+            });
+        }}
+      >
+        <Form.Item label="获取时间范围" name="time_range">
           <RangePicker
             defaultValue={[
-              dayjs(date.setDate(date.getDate() - 13)),
+              dayjs(date.setDate(date.getDate() - 12)),
               dayjs(date.setDate(date.getDate() + 6)),
             ]}
             disabled
           />
-        </Flex>
-        <Flex vertical={false} align="center">
-          <ComText>拉取分区代码：</ComText>
+        </Form.Item>
+        <Form.Item label="拉取分区代码" name="video_zones">
           <Select
             mode="tags"
             style={{ width: "100%" }}
             defaultValue={[26, 126, 22]}
-            disabled
           />
-        </Flex>
-        <Flex vertical={false} align="center">
-          <ComText>承认分区代码：</ComText>
-          <Select
-            mode="tags"
-            style={{ width: "100%" }}
-            defaultValue={[26]}
-            disabled
-          />
-        </Flex>
-        <Flex vertical={false} align="center">
-          <ComText>承认 TAG：</ComText>
+        </Form.Item>
+        <Form.Item label="承认分区代码" name="tag_whitezone">
+          <Select mode="tags" style={{ width: "100%" }} defaultValue={[26]} />
+        </Form.Item>
+        <Form.Item label="承认 TAG" name="tag_whitelist">
           <Select
             mode="tags"
             style={{ width: "100%" }}
             defaultValue={["音mad", "ytpmv"]}
-            disabled
           />
-        </Flex>
-        <Flex vertical={false} align="center">
-          <ComText>拉取视频个数：</ComText>
-          <InputNumber defaultValue={100} disabled />
-        </Flex>
-        <Flex vertical={false} align="center">
-          <ComText>主榜个数：</ComText>
-          <InputNumber defaultValue={15} disabled />
-        </Flex>
-        <Flex vertical={false} align="center">
-          <ComText>主榜中断数：</ComText>
-          <InputNumber defaultValue={5} disabled />
-        </Flex>
-        <Flex vertical={false} align="center">
-          <ComText>副榜个数：</ComText>
-          <InputNumber defaultValue={40} disabled />
-        </Flex>
-        <Flex vertical={false} align="center">
-          <ComText>间隔时间：</ComText>
-          <InputNumber addonAfter="秒" defaultValue={20} disabled />
-        </Flex>
-        <Flex vertical={false} align="center">
-          <ComText>主榜最长时间：</ComText>
-          <InputNumber addonAfter="秒" defaultValue={70} disabled />
-        </Flex>
-      </Space>
-      <Space></Space>
+        </Form.Item>
+        <Form.Item label="拉取视频个数" name="pull_full_list_stat">
+          <InputNumber defaultValue={100} />
+        </Form.Item>
+        <Form.Item label="主榜个数" name="main_end">
+          <InputNumber defaultValue={15} />
+        </Form.Item>
+        <Form.Item label="主榜中断数" name="insert_count">
+          <InputNumber defaultValue={5} />
+        </Form.Item>
+        <Form.Item label="副榜个数" name="side_end">
+          <InputNumber defaultValue={40} />
+        </Form.Item>
+        <Form.Item label="间隔时间" name="sep_time">
+          <InputNumber addonAfter="秒" defaultValue={20} />
+        </Form.Item>
+        <Form.Item label="主榜最长时间" name="max_main_duration">
+          <InputNumber addonAfter="秒" defaultValue={70} />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" loading={loading}>
+            <UploadOutlined /> 上传配置
+          </Button>
+        </Form.Item>
+      </Form>
       <Divider orientation="left">运行</Divider>
       <SendButton url="/backend/get-data" />
     </>
