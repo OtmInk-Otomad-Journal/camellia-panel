@@ -421,11 +421,15 @@ const ComputeTool = () => {
           <Form.List name="items">
             {(fields, { add, remove }) => (
               <>
-                <Row gutter={24} align="middle">
+                <Row align="middle">
                   <Col style={{ marginRight: "2em" }}>
                     <MathSVG />
                   </Col>
-                  <Col>
+                  <Col
+                    style={{
+                      overflow: "hidden",
+                    }}
+                  >
                     <div
                       style={{
                         display: "flex",
@@ -434,6 +438,7 @@ const ComputeTool = () => {
                         position: "absolute",
                         fontSize: "10em",
                         opacity: 0.2,
+                        borderRadius: 4,
                         alignItems: "center",
                         justifyContent: "center",
                         border: "2px dashed",
@@ -443,18 +448,24 @@ const ComputeTool = () => {
                         <mi>x</mi>
                       </math>
                     </div>
-                    {fields.map((field) => (
-                      <Form.Item
-                        key={field.key}
-                        name={[field.name, "points"]}
-                        label="分数"
-                      >
-                        <InputNumber onChange={computeScore} />
-                      </Form.Item>
-                    ))}
-                    <Button type="dashed" onClick={() => add()} block>
-                      + 添加项目
-                    </Button>
+                    <Col
+                      style={{
+                        margin: "1em",
+                      }}
+                    >
+                      {fields.map((field) => (
+                        <Form.Item
+                          key={field.key}
+                          name={[field.name, "points"]}
+                          label="分数"
+                        >
+                          <InputNumber onChange={computeScore} />
+                        </Form.Item>
+                      ))}
+                      <Button type="dashed" onClick={() => add()} block>
+                        + 添加项目
+                      </Button>
+                    </Col>
                   </Col>
                   <Col>
                     <Row
@@ -467,8 +478,33 @@ const ComputeTool = () => {
                       />
                     </Row>
                   </Col>
-                  <Col>
-                    <Form.Item name="total" label="计算得分">
+                  <Col style={{ overflow: "hidden" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        height: "100%",
+                        position: "absolute",
+                        fontSize: "10em",
+                        opacity: 0.2,
+                        borderRadius: 4,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        border: "2px dashed",
+                      }}
+                    >
+                      <math>
+                        <mi>f</mi>
+                        <mo stretchy="false">(</mo>
+                        <mi>x</mi>
+                        <mo stretchy="false">)</mo>
+                      </math>
+                    </div>
+                    <Form.Item
+                      style={{ margin: "1.8em 2em" }}
+                      name="total"
+                      label="计算得分"
+                    >
                       <Input onChange={computeScore} />
                     </Form.Item>
                   </Col>

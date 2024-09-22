@@ -57,6 +57,7 @@ const SideMenu = () => {
 
   return (
     <Menu
+      theme="dark"
       selectedKeys={location.pathname}
       defaultOpenKeys={["/sub1"]}
       destyle={{ height: "100%", borderRight: 0 }}
