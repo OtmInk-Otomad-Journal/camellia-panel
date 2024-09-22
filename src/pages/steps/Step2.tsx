@@ -426,6 +426,23 @@ const ComputeTool = () => {
                     <MathSVG />
                   </Col>
                   <Col>
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        height: "100%",
+                        position: "absolute",
+                        fontSize: "10em",
+                        opacity: 0.2,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        border: "2px dashed",
+                      }}
+                    >
+                      <math>
+                        <mi>x</mi>
+                      </math>
+                    </div>
                     {fields.map((field) => (
                       <Form.Item
                         key={field.key}
