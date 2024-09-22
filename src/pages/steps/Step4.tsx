@@ -1,5 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 
 import jsonp from "jsonp";
 
@@ -9,9 +9,7 @@ import {
   Typography,
   Divider,
   Button,
-  Step,
   message,
-  Upload,
   Row,
   Card,
   Col,
@@ -21,7 +19,6 @@ import {
 } from "antd";
 import { pickData } from "../../types/common";
 import { get, post } from "../../common/api";
-import { address, port } from "../../common/config";
 
 import {
   FieldTimeOutlined,
@@ -32,56 +29,24 @@ import {
 
 const { Title, Paragraph } = Typography;
 
-const SendButton = ({ url }) => {
-  const [messageApi, contextHolder] = message.useMessage();
-  const [buttonState, setButtonState] = useState({
-    danger: false,
-    text: "开始 / 继续获取",
-  });
-
-  const toggleDanger = () => {
-    if (buttonState.danger) {
-      get("/backend/get-data/stop")()
-        .then((_) => {
-          messageApi.success("已终止进程");
-        })
-        .catch((_) => {
-          {
-            messageApi.error("终止线程时遇到了异常");
-          }
-        });
-    }
-    setButtonState((prevState) => ({
-      danger: !prevState.danger,
-      text: prevState.danger ? "开始 / 继续获取" : "终止线程",
-    }));
+type workDataType = {
+  owner: {
+    name: string;
   };
-
-  return (
-    <>
-      {contextHolder}
-      {buttonState.danger && <LogBox url={url} />}
-      <Button
-        style={{ marginTop: 12 }}
-        type="primary"
-        onClick={toggleDanger}
-        danger={buttonState.danger}
-      >
-        {buttonState.text}
-      </Button>
-    </>
-  );
+  pubdate: number;
+  title: string;
 };
 
 export default function MainPage() {
   const [listData, setListData] = useState<pickData[]>([]);
   const [current, setCurrent] = useState(0);
 
-  const [workData, setWorkData] = useState();
+  const [workData, setWorkData]: [
+    workDataType | undefined,
+    Dispatch<SetStateAction<workDataType | undefined>>,
+  ] = useState();
 
-  const items = listData.map((_item, index) => ({
-    key: index + 1,
-  }));
+  const items = listData.map(() => ({}));
 
   const UploadData = () => {
     const [loadings, setLoadings] = useState<boolean[]>([false]);
@@ -143,7 +108,7 @@ export default function MainPage() {
   const getBili = (aid: number | string) => {
     jsonp(
       "https://api.bilibili.com/x/web-interface/view?jsonp=jsonp&aid=" + aid,
-      (err, response) => {
+      (_err, response) => {
         if (response.code == 0) {
           setWorkData(response.data);
         } else {
@@ -163,7 +128,7 @@ export default function MainPage() {
     // setChecked(listData[current].status);
   };
 
-  const changeCurrent = (num) => {
+  const changeCurrent = (num: number) => {
     setCurrent((value) => {
       getBili(listData[value + num].aid);
       return value + num;
@@ -171,7 +136,7 @@ export default function MainPage() {
   };
 
   useEffect(() => {
-    get("/backend/pull-pickup-data")().then((data) => {
+    get<pickData[]>("/backend/pull-pickup-data")().then((data) => {
       setListData(data);
       getBili(data[current].aid);
     });
@@ -201,7 +166,7 @@ export default function MainPage() {
                 </Button>
               </Col>
               <Col style={{ flex: 1 }}>
-                <Steps current={current} items={items} />
+                <Steps responsive={false} current={current} items={items} />
               </Col>
               <Col>
                 <Button
@@ -216,7 +181,7 @@ export default function MainPage() {
                 </Button>
               </Col>
             </Row>
-            <Flex justify="space-between">
+            <Flex gap={24} wrap justify="space-around">
               <Col flex={1}>
                 {workData && (
                   <>
@@ -252,11 +217,9 @@ export default function MainPage() {
                     aspectRatio: "16 /9",
                     height: 200,
                     borderRadius: 4,
-                    marginLeft: 24,
                   }}
                   src={`//player.bilibili.com/player.html?isOutside=true&aid=${listData[current].aid}`}
                   frameBorder="no"
-                  framespacing="0"
                   allowFullScreen
                 ></iframe>
               </Col>

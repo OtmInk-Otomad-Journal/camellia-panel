@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { useState, useEffect } from "react";
-import { Button, message, Divider, Typography, DatePicker } from "antd";
+import { Button, message, Divider, Typography } from "antd";
 import { get } from "../../common/api";
 import { address, port } from "../../common/config";
 
@@ -8,7 +8,7 @@ import { QRCode } from "antd";
 
 const { Title, Paragraph } = Typography;
 
-const SendButton = ({ url }) => {
+const SendButton = ({ url }: { url: string }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [buttonState, setButtonState] = useState({
     danger: false,

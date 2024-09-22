@@ -7,10 +7,15 @@ import {
   Divider,
   Typography,
   InputNumber,
+  DatePicker,
   Form,
 } from "antd";
 import LogBox from "../../components/LogBox";
 import { get, post } from "../../common/api";
+
+import dayjs from "dayjs";
+
+const { RangePicker } = DatePicker;
 
 import { UploadOutlined } from "@ant-design/icons";
 
@@ -57,6 +62,10 @@ const SendButton = ({ url }: { url: string }) => {
   );
 };
 
+type DataConfigType = {
+  time_range: (string | dayjs.Dayjs)[];
+};
+
 export default function MainPage() {
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
@@ -65,7 +74,10 @@ export default function MainPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    get("/backend/get-data-config")().then((data) => {
+    get<DataConfigType>("/backend/get-data-config")().then((data) => {
+      // 对日期单独处理
+      data.time_range[0] = dayjs(data.time_range[0]);
+      data.time_range[1] = dayjs(data.time_range[1]);
       form.setFieldsValue(data);
       setLoaded(true);
     });
@@ -99,9 +111,9 @@ export default function MainPage() {
               });
           }}
         >
-          {/* <Form.Item label="获取时间范围" name="time_range">
-          <RangePicker />
-        </Form.Item> */}
+          <Form.Item label="获取时间范围" name="time_range">
+            <RangePicker />
+          </Form.Item>
           <Form.Item label="拉取分区代码" name="video_zones">
             <Select
               mode="tags"

@@ -1,23 +1,13 @@
 /* eslint-disable react/react-in-jsx-scope */
-import {
-  JSXElementConstructor,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 import {
   Space,
   Button,
   message,
-  Select,
   Divider,
   Typography,
-  DatePicker,
   InputNumber,
   Flex,
-  theme,
   Collapse,
   Input,
   Form,
@@ -25,6 +15,7 @@ import {
   Col,
   FormListFieldData,
   Card,
+  FormInstance,
 } from "antd";
 import { UploadOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import { get, post } from "../../common/api";
@@ -42,8 +33,12 @@ const getValue = (field: FormListFieldData, attr: string) => {
 /**
  * 静态获取表单值，但不重新定义 form
  */
-function checkValueWithForm(form, field: FormListFieldData, attr: string) {
-  return form.getFieldValue(["items", field.name, attr], form);
+function checkValueWithForm(
+  form: FormInstance,
+  field: FormListFieldData,
+  attr: string
+) {
+  return form.getFieldValue(["items", field.name, attr]);
 }
 
 /**
@@ -54,7 +49,7 @@ const checkValue = (field: FormListFieldData, attr: string) => {
   return form.getFieldValue(["items", field.name, attr]);
 };
 
-const PanelInside = ({ field }) => {
+const PanelInside = ({ field }: { field: FormListFieldData }) => {
   const form = Form.useFormInstance();
 
   const aid = getValue(field, "aid");
@@ -198,7 +193,13 @@ const PanelInside = ({ field }) => {
   );
 };
 
-const ItemList = ({ field, remove }) => {
+const ItemList = ({
+  field,
+  remove,
+}: {
+  field: FormListFieldData;
+  remove: (index: number | number[]) => void;
+}) => {
   return (
     <>
       <Collapse
@@ -264,7 +265,7 @@ const DataBox = () => {
             <ResortData></ResortData>
           </Form.Item>
           <Form.List name="items">
-            {(fields, { add, remove }) => (
+            {(fields, { remove }) => (
               <Space direction="vertical" style={{ width: "100%" }}>
                 {fields.map((field) => {
                   if (field.name < 100) {
@@ -287,6 +288,11 @@ const DataBox = () => {
       )}
     </>
   );
+};
+
+type rankData = {
+  ranking: number;
+  score: number;
 };
 
 const ResortData = () => {
@@ -314,7 +320,7 @@ const ResortData = () => {
     // 因为加载太快了，为了展现动画效果，人为延长了时间
     enterLoading(index);
     setTimeout(() => {
-      const data: [] = form.getFieldValue("items");
+      const data: rankData[] = form.getFieldValue("items");
       data.sort((a, b) => {
         return b.score - a.score;
       });
@@ -371,31 +377,33 @@ const ResortData = () => {
 };
 
 const MathSVG = () => (
-  <math
-    style={{ fontSize: "2em" }}
-    xmlns="http://www.w3.org/1998/Math/MathML"
-    display="block"
-  >
-    <mi>f</mi>
-    <mo stretchy="false">(</mo>
-    <mi>x</mi>
-    <mo stretchy="false">)</mo>
-    <mo>=</mo>
-    <mn>1</mn>
-    <mo>+</mo>
-    <mfrac>
-      <mrow>
-        <mi>l</mi>
-        <mi>g</mi>
-        <mo stretchy="false">(</mo>
-        <mn>1</mn>
-        <mo>+</mo>
-        <mi>x</mi>
-        <mo stretchy="false">)</mo>
-      </mrow>
-      <mn>10</mn>
-    </mfrac>
-  </math>
+  <>
+    <math
+      style={{ fontSize: "2em" }}
+      xmlns="http://www.w3.org/1998/Math/MathML"
+      display="block"
+    >
+      <mi>f</mi>
+      <mo stretchy="false">(</mo>
+      <mi>x</mi>
+      <mo stretchy="false">)</mo>
+      <mo>=</mo>
+      <mn>1</mn>
+      <mo>+</mo>
+      <mfrac>
+        <mrow>
+          <mi>l</mi>
+          <mi>g</mi>
+          <mo stretchy="false">(</mo>
+          <mn>1</mn>
+          <mo>+</mo>
+          <mi>x</mi>
+          <mo stretchy="false">)</mo>
+        </mrow>
+        <mn>10</mn>
+      </mfrac>
+    </math>
+  </>
 );
 
 const ComputeTool = () => {
@@ -419,7 +427,7 @@ const ComputeTool = () => {
       <Form form={form} initialValues={{ list: [{}] }}>
         <Card title="额外分数计算">
           <Form.List name="items">
-            {(fields, { add, remove }) => (
+            {(fields, { add }) => (
               <>
                 <Row align="middle">
                   <Col style={{ marginRight: "2em" }}>
@@ -428,6 +436,7 @@ const ComputeTool = () => {
                   <Col
                     style={{
                       overflow: "hidden",
+                      margin: "0.4em 0",
                     }}
                   >
                     <div
@@ -478,7 +487,7 @@ const ComputeTool = () => {
                       />
                     </Row>
                   </Col>
-                  <Col style={{ overflow: "hidden" }}>
+                  <Col style={{ overflow: "hidden", margin: "0.4em 0" }}>
                     <div
                       style={{
                         display: "flex",

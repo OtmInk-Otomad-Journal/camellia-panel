@@ -6,7 +6,7 @@ import { get } from "../../common/api";
 
 const { Title, Paragraph } = Typography;
 
-const SendButton = ({ url }) => {
+const SendButton = ({ url }: { url: string }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [buttonState, setButtonState] = useState({
     danger: false,

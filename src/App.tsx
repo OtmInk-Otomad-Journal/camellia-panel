@@ -1,10 +1,15 @@
 import { Col, ConfigProvider, Layout, Row, theme, Typography } from "antd";
 import React, { PropsWithChildren, useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
+import locale from "antd/locale/zh_CN";
 
 import SideMenu from "./components/SideMenu.tsx";
 import { BarChartOutlined } from "@ant-design/icons";
 import DarkValue from "./common/darkvalue";
+
+import dayjs from "dayjs";
+import "dayjs/locale/zh-cn";
+dayjs.locale("zh-cn");
 
 const { Header, Content, Sider } = Layout;
 
@@ -50,6 +55,7 @@ const App: React.FC<PropsWithChildren<{}>> = () => {
       theme={{
         algorithm: darkStyle ? theme.darkAlgorithm : theme.defaultAlgorithm,
       }}
+      locale={locale}
     >
       <DarkValue.Provider value={darkStyle}>
         <Layout style={{ height: "100vh" }}>

@@ -15,6 +15,7 @@ import {
   Upload,
   UploadProps,
   InputNumber,
+  FormInstance,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { get, post } from "../../common/api";
@@ -46,11 +47,26 @@ const checkValue = (field: FormListFieldData, attr: string) => {
 /**
  * 静态改变表单值，但不重新定义 form
  */
-const changeValueWF = (form, field: FormListFieldData, attr: string, value) => {
+const changeValueWF = (
+  form: FormInstance<any>,
+  field: FormListFieldData,
+  attr: string,
+  value: string
+) => {
   form.setFieldValue(["items", field.name, attr], value);
 };
 
-const TextBoxWithTags = ({ className, field, attr, style = {} }) => {
+const TextBoxWithTags = ({
+  className,
+  field,
+  attr,
+  style = {},
+}: {
+  className: string;
+  field: FormListFieldData;
+  attr: string;
+  style?: {};
+}) => {
   const form = Form.useFormInstance();
 
   const textValue = getValue(field, attr);
@@ -93,7 +109,17 @@ const TextBoxWithTags = ({ className, field, attr, style = {} }) => {
   );
 };
 
-const TextBox = ({ className, field, attr, style = {} }) => {
+const TextBox = ({
+  className,
+  field,
+  attr,
+  style = {},
+}: {
+  className: string;
+  field: FormListFieldData;
+  attr: string;
+  style?: {};
+}) => {
   const form = Form.useFormInstance();
 
   const textValue = getValue(field, attr);
@@ -118,7 +144,13 @@ const TextBox = ({ className, field, attr, style = {} }) => {
   );
 };
 
-const CalendarBox = ({ field, remove }) => {
+const CalendarBox = ({
+  field,
+  remove,
+}: {
+  field: FormListFieldData;
+  remove: (index: number | number[]) => void;
+}) => {
   const form = Form.useFormInstance();
 
   // const [image, setImage] = useState(
@@ -192,7 +224,7 @@ const CalendarBox = ({ field, remove }) => {
               </Button>
             </Upload>
           </ImgCrop>
-          <Button danger onClick={async () => await remove(field.name)}>
+          <Button danger onClick={async () => remove(field.name)}>
             删除
           </Button>
         </Space>

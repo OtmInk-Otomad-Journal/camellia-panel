@@ -4,27 +4,40 @@ import { Button, Divider, Typography, Select, Space, Card } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 import { get } from "../../common/api";
 import { address, port } from "../../common/config";
+import { BaseOptionType } from "antd/es/select";
 
 const { Title, Paragraph, Text } = Typography;
 
+type FastDataType = {
+  content: string;
+};
+
+type ResultListType = {
+  files: BaseOptionType[];
+};
+
+type FastListType = {
+  files: BaseOptionType[];
+};
+
 export default function MainPage() {
-  const [filelist, setFileList] = useState([]);
+  const [filelist, setFileList] = useState<ResultListType["files"]>([]);
   const [file, setFile] = useState();
-  const [fastlist, setFastList] = useState([]);
-  const [fast, setFast] = useState();
+  const [fastlist, setFastList] = useState<FastListType["files"]>([]);
+  const [fast, setFast] = useState("");
 
   const pullFast = (filename: string) => {
-    get(`/backend/get-fastview/${filename}`)().then((data: any) => {
+    get<FastDataType>(`/backend/get-fastview/${filename}`)().then((data) => {
       // setListData(data);
       setFast(data.content);
     });
   };
   useEffect(() => {
-    get("/backend/get-result-list")().then((data: any) => {
+    get<ResultListType>("/backend/get-result-list")().then((data) => {
       // setListData(data);
       setFileList(data.files);
     });
-    get("/backend/get-fastview-list")().then((data: any) => {
+    get<FastListType>("/backend/get-fastview-list")().then((data) => {
       // setListData(data);
       setFastList(data.files);
     });

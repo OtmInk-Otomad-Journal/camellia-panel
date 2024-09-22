@@ -1,7 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { useState } from "react";
 
-import { Typography, Divider, Button, Step, message, Upload } from "antd";
+import { Typography, Divider, Button, message, Upload } from "antd";
 import type { UploadProps } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { address, port } from "../../common/config";
