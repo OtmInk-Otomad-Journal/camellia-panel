@@ -1,29 +1,22 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { useEffect, useState } from "react";
 import {
-  Space,
   Button,
   message,
   Select,
   Divider,
   Typography,
-  DatePicker,
   InputNumber,
-  Flex,
-  theme,
   Form,
 } from "antd";
-import dayjs from "dayjs";
 import LogBox from "../../components/LogBox";
 import { get, post } from "../../common/api";
 
 import { UploadOutlined } from "@ant-design/icons";
 
-const { RangePicker } = DatePicker;
-
 const { Title, Paragraph } = Typography;
 
-const SendButton = ({ url }) => {
+const SendButton = ({ url }: { url: string }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [buttonState, setButtonState] = useState({
     danger: false,
@@ -65,7 +58,6 @@ const SendButton = ({ url }) => {
 };
 
 export default function MainPage() {
-  const date = new Date();
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
   const [loaded, setLoaded] = useState(false);

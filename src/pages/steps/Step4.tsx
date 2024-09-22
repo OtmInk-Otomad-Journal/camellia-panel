@@ -79,7 +79,7 @@ export default function MainPage() {
 
   const [workData, setWorkData] = useState();
 
-  const items = listData.map((item, index) => ({
+  const items = listData.map((_item, index) => ({
     key: index + 1,
   }));
 
@@ -268,7 +268,7 @@ export default function MainPage() {
                   <LikeOutlined style={{ marginRight: 10 }} />
                   {listData[current].picker}
                 </Title>
-                <Paragraph level={3}>{listData[current].reason}</Paragraph>
+                <Paragraph>{listData[current].reason}</Paragraph>
               </Col>
             </Row>
           </Card>

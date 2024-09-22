@@ -1,14 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { useEffect, useState } from "react";
-import {
-  Button,
-  message,
-  Divider,
-  Typography,
-  Select,
-  Space,
-  Card,
-} from "antd";
+import { Button, Divider, Typography, Select, Space, Card } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 import { get } from "../../common/api";
 import { address, port } from "../../common/config";
@@ -22,17 +14,17 @@ export default function MainPage() {
   const [fast, setFast] = useState();
 
   const pullFast = (filename: string) => {
-    get(`/backend/get-fastview/${filename}`)().then((data) => {
+    get(`/backend/get-fastview/${filename}`)().then((data: any) => {
       // setListData(data);
       setFast(data.content);
     });
   };
   useEffect(() => {
-    get("/backend/get-result-list")().then((data) => {
+    get("/backend/get-result-list")().then((data: any) => {
       // setListData(data);
       setFileList(data.files);
     });
-    get("/backend/get-fastview-list")().then((data) => {
+    get("/backend/get-fastview-list")().then((data: any) => {
       // setListData(data);
       setFastList(data.files);
     });

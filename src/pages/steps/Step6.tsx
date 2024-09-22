@@ -36,13 +36,6 @@ const getValue = (field: FormListFieldData, attr: string) => {
 };
 
 /**
- * 静态获取表单值，但不重新定义 form
- */
-function checkValueWithForm(form, field: FormListFieldData, attr: string) {
-  return form.getFieldValue(["items", field.name, attr], form);
-}
-
-/**
  * 静态获取表单值，仅拉取一次
  */
 const checkValue = (field: FormListFieldData, attr: string) => {
@@ -81,7 +74,7 @@ const TextBoxWithTags = ({ className, field, attr, style = {} }) => {
           editable={{
             onChange: (value) => changeValueWF(form, field, attr, value),
             autoSize: true,
-            triggerType: "text",
+            triggerType: ["text"],
           }}
         >
           {textValue || "<空白内容>"}
@@ -116,7 +109,7 @@ const TextBox = ({ className, field, attr, style = {} }) => {
         editable={{
           onChange: (value) => changeValueWF(form, field, attr, value),
           autoSize: true,
-          triggerType: "text",
+          triggerType: ["text"],
         }}
       >
         {textValue || "<空白内容>"}
@@ -154,7 +147,7 @@ const CalendarBox = ({ field, remove }) => {
           <div className="ca-time">
             <ColorPicker
               defaultValue={checkValue(field, "color")}
-              onChange={(value, css) =>
+              onChange={(_value, css) =>
                 changeValueWF(form, field, "color", css)
               }
             >
