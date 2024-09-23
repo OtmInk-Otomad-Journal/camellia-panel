@@ -33,7 +33,7 @@ const items = [
       },
       {
         key: "/step5",
-        label: "运行 Pick Up 数据",
+        label: "下载视频资源",
       },
       {
         key: "/step6",
