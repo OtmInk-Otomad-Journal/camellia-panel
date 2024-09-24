@@ -59,20 +59,22 @@ const App: React.FC<PropsWithChildren<{}>> = () => {
     >
       <DarkValue.Provider value={darkStyle}>
         <Layout style={{ height: "100vh" }}>
-          <Header style={{ display: "flex", alignItems: "center" }}>
-            {/* style={{ display: "flex", alignItems: "center" }} */}
-            <Row
-              style={{ width: "100%" }}
-              justify={{ lg: "start", sm: "center" }}
-            >
-              <Col>
-                <Title style={{ fontSize: "2em" }}>
-                  <BarChartOutlined style={{ marginRight: "0.3em" }} />
-                  音之墨小周刊 · 面板
-                </Title>
-              </Col>
-            </Row>
-          </Header>
+          <ConfigProvider theme={{theme.darkAlgorithm}}>
+            <Header style={{ display: "flex", alignItems: "center" }}>
+              {/* style={{ display: "flex", alignItems: "center" }} */}
+              <Row
+                style={{ width: "100%" }}
+                justify={{ lg: "start", sm: "center" }}
+              >
+                <Col>
+                  <Title style={{ fontSize: "2em" }}>
+                    <BarChartOutlined style={{ marginRight: "0.3em" }} />
+                    音之墨小周刊 · 面板
+                  </Title>
+                </Col>
+              </Row>
+            </Header>
+          </ConfigProvider>
           <Layout>
             <Sider breakpoint="lg" collapsedWidth="0">
               <SideMenu />
