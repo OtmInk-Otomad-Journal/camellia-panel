@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Menu } from "antd";
 
 import { DeliveredProcedureOutlined } from "@ant-design/icons";
@@ -68,9 +66,9 @@ const SideMenu = () => {
   return (
     <Menu
       theme="dark"
-      selectedKeys={location.pathname}
+      selectedKeys={[location.pathname]}
       defaultOpenKeys={["/sub1"]}
-      destyle={{ height: "100%", borderRight: 0 }}
+      style={{ height: "100%", borderRight: 0 }}
       mode="inline"
       items={items}
       onClick={({ key }) => {
