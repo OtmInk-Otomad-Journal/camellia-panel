@@ -241,6 +241,11 @@ const ItemList = ({
   );
 };
 
+type DataType = {
+  last_change: string;
+  data: any;
+};
+
 const DataBox = () => {
   const [form] = Form.useForm();
 
@@ -250,9 +255,10 @@ const DataBox = () => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    get("/backend/pull-data")().then((data) => {
+    get<DataType>("/backend/pull-data")().then((data) => {
       // setListData(data);
-      form.setFieldValue("items", data);
+      form.setFieldValue("items", data.data);
+      form.setFieldValue("last_change", data.last_change);
       setLoaded(true);
     });
   }, []);
@@ -334,7 +340,10 @@ const ResortData = () => {
   const sendData = (index: number) => {
     enterLoading(index);
     setTimeout(() => {
-      const data: [] = form.getFieldValue("items");
+      const data: DataType = {
+        last_change: form.getFieldValue("last_change"),
+        data: form.getFieldValue("items"),
+      };
       post("/backend/save-data", data)()
         .then((_) => {
           messageApi.success("已提交数据");
