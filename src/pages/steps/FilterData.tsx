@@ -351,7 +351,7 @@ const ResortData = () => {
         })
         .catch((reason) => {
           {
-            messageApi.error(reason);
+            messageApi.error("数据上传失败，" + reason);
             exitLoading(index);
           }
         });

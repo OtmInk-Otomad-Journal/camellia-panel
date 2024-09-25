@@ -1,9 +1,9 @@
 // 废弃，暂未使用的组件
 
-import { theme, message } from "antd";
+import { message } from "antd";
 import { QRCode } from "antd";
 
-import React, { PropsWithChildren, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { address, port } from "../common/config";
 
