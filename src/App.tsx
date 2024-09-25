@@ -59,7 +59,7 @@ const App: React.FC<PropsWithChildren<{}>> = () => {
     >
       <DarkValue.Provider value={darkStyle}>
         <Layout style={{ height: "100vh" }}>
-          <ConfigProvider theme={{theme.darkAlgorithm}}>
+          <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
             <Header style={{ display: "flex", alignItems: "center" }}>
               {/* style={{ display: "flex", alignItems: "center" }} */}
               <Row

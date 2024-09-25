@@ -7,7 +7,12 @@ type APIWrapper<T> = {
   data: T;
 };
 
-axios.defaults.baseURL = `${address}:${port}`;
+if (import.meta.env.VITE_IDENTITY == "ADMIN") {
+  axios.defaults.baseURL = `${address}:${port}`;
+} else {
+  axios.defaults.baseURL = import.meta.env.VITE_ONLINE_API_URL;
+}
+
 // axios.defaults.headers.post["Content-Type"] =
 //   "application/x-www-form-urlencoded";
 async function _get<T>(path: string) {
