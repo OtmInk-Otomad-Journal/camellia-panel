@@ -349,9 +349,9 @@ const ResortData = () => {
           messageApi.success("已提交数据");
           exitLoading(index);
         })
-        .catch((_) => {
+        .catch((reason) => {
           {
-            messageApi.error("提交数据时遇到了异常");
+            messageApi.error(reason);
             exitLoading(index);
           }
         });

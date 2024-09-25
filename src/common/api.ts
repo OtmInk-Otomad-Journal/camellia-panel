@@ -20,7 +20,7 @@ async function _get<T>(path: string) {
     const result: APIWrapper<T> = res.data;
     if (result.code != 0) {
       throw Error(
-        `Error when fetching data Code=${result.code} Msg=${result.msg}`
+        `遇到了错误！状态码是 ${result.code}，回返消息是：${result.msg}`
       );
     }
     return result.data;
