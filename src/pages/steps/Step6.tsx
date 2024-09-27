@@ -17,7 +17,12 @@ import {
   InputNumber,
   FormInstance,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import {
+  UploadOutlined,
+  ArrowDownOutlined,
+  ArrowUpOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import { get, post } from "../../common/api";
 import parse from "html-react-parser";
 
@@ -147,9 +152,11 @@ const TextBox = ({
 const CalendarBox = ({
   field,
   remove,
+  move,
 }: {
   field: FormListFieldData;
   remove: (index: number | number[]) => void;
+  move: (from: number, to: number) => void;
 }) => {
   const form = Form.useFormInstance();
 
@@ -224,8 +231,18 @@ const CalendarBox = ({
               </Button>
             </Upload>
           </ImgCrop>
-          <Button danger onClick={async () => remove(field.name)}>
-            删除
+          <Button danger onClick={async () => move(field.name, field.name - 1)}>
+            <ArrowUpOutlined />
+          </Button>
+          <Button danger onClick={async () => move(field.name, field.name + 1)}>
+            <ArrowDownOutlined />
+          </Button>
+          <Button
+            type="primary"
+            danger
+            onClick={async () => remove(field.name)}
+          >
+            <DeleteOutlined />
           </Button>
         </Space>
       </div>
@@ -257,7 +274,7 @@ const DataBox = () => {
             <ResortData></ResortData>
           </Form.Item>
           <Form.List name="items">
-            {(fields, { add, remove }) => {
+            {(fields, { add, remove, move }) => {
               return (
                 <>
                   <Space
@@ -278,6 +295,7 @@ const DataBox = () => {
                             key={field.name}
                             field={field}
                             remove={remove}
+                            move={move}
                           />
                         ))}
                       </Space>

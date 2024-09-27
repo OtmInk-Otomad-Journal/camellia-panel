@@ -16,6 +16,7 @@ import {
   FormListFieldData,
   Card,
   FormInstance,
+  Popconfirm,
 } from "antd";
 import { UploadOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import { get, post } from "../../common/api";
@@ -220,16 +221,23 @@ const ItemList = ({
                   {checkValue(field, "ranking")}
                 </span>
                 {checkValue(field, "title")}
-                <Button
-                  danger
-                  style={{
-                    position: "absolute",
-                    right: 55,
-                  }}
-                  onClick={async () => await remove(field.name)}
+                <Popconfirm
+                  title="删除稿件"
+                  description="你确定要删除这个稿件吗？"
+                  onConfirm={async () => await remove(field.name)}
+                  okText="确认"
+                  cancelText="取消"
                 >
-                  删除
-                </Button>
+                  <Button
+                    danger
+                    style={{
+                      position: "absolute",
+                      right: 55,
+                    }}
+                  >
+                    删除
+                  </Button>
+                </Popconfirm>
               </Flex>
             ),
             children: <PanelInside field={field} />,
