@@ -231,10 +231,10 @@ const CalendarBox = ({
               </Button>
             </Upload>
           </ImgCrop>
-          <Button danger onClick={async () => move(field.name, field.name - 1)}>
+          <Button onClick={async () => move(field.name, field.name - 1)}>
             <ArrowUpOutlined />
           </Button>
-          <Button danger onClick={async () => move(field.name, field.name + 1)}>
+          <Button onClick={async () => move(field.name, field.name + 1)}>
             <ArrowDownOutlined />
           </Button>
           <Button
