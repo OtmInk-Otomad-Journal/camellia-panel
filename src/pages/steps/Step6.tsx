@@ -221,7 +221,7 @@ const CalendarBox = ({
         <img
           key={field.name}
           className="cover"
-          src={panel_prefix + (getValue(field, "cover") || "")}
+          src={panel_prefix + "/" + (getValue(field, "cover") || "")}
         />
         <Space>
           <ImgCrop aspect={1368 / 128}>
