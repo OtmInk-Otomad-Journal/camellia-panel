@@ -40,6 +40,10 @@ const admin_list = [
     key: "/step8",
     label: "获取结果",
   },
+  {
+    key: "/step9",
+    label: "删除调整",
+  },
 ];
 
 const auditor_list = [

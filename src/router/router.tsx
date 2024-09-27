@@ -13,6 +13,7 @@ import Step6 from "../pages/steps/Step6";
 import Step7 from "../pages/steps/Step7";
 import Step8 from "../pages/steps/Step8";
 import FilterData from "../pages/steps/FilterData";
+import Step9 from "../pages/steps/Step9";
 
 const admin_list = [
   {
@@ -54,6 +55,10 @@ const admin_list = [
   {
     path: "/step8",
     element: <Step8 />,
+  },
+  {
+    path: "/step9",
+    element: <Step9 />,
   },
 ];
 

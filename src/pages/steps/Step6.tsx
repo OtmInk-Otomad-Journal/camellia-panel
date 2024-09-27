@@ -29,7 +29,7 @@ import parse from "html-react-parser";
 import "../../assets/calendarStyle.scss";
 
 import ImgCrop from "antd-img-crop";
-import { address, port, web_prefix, panel_prefix } from "../../common/config";
+import { address, port, panel_prefix } from "../../common/config";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -309,7 +309,6 @@ const DataBox = () => {
                           date: "日期",
                           title: "新项目",
                           subtitle: "",
-                          web_prefix: web_prefix,
                           cover: "",
                         })
                       }
@@ -322,13 +321,13 @@ const DataBox = () => {
               );
             }}
           </Form.List>
-          {/* <Form.Item noStyle shouldUpdate>
+          <Form.Item noStyle shouldUpdate>
             {() => (
               <Typography>
                 <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
               </Typography>
             )}
-          </Form.Item> */}
+          </Form.Item>
         </Form>
       )}
     </>
