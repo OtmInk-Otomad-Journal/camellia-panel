@@ -9,9 +9,14 @@ import {
   Popconfirm,
   message,
 } from "antd";
-import { DeleteOutlined, NodeExpandOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  NodeExpandOutlined,
+  DownloadOutlined,
+} from "@ant-design/icons";
 import { get } from "../../common/api";
 import { BaseOptionType } from "antd/es/select";
+import { address, port } from "../../common/config";
 
 const { Title, Paragraph } = Typography;
 
@@ -32,6 +37,7 @@ export default function MainPage() {
   const [file, setFile] = useState("");
   const [cliplist, setClipList] = useState<ClipListType["files"]>([]);
   const [clip, setClip] = useState("");
+  const [dclip, setDClip] = useState("");
   const [clipdirlist, setClipDirList] = useState<ClipListType["files"]>([]);
   const [dir, setDir] = useState("");
 
@@ -134,6 +140,19 @@ export default function MainPage() {
             删除文件
           </Button>
         </Popconfirm>
+      </Space>
+      <Divider orientation="left">下载片段</Divider>
+      <Paragraph>选择对应的片段进行下载。</Paragraph>
+      <Space size="middle">
+        <Select onChange={setDClip} style={{ width: 200 }} options={cliplist} />
+        <Button
+          type="primary"
+          href={`${address}:${port}/backend/download-clip/${dclip}`}
+          target="_blank"
+        >
+          <DownloadOutlined />
+          下载文件
+        </Button>
       </Space>
       <Divider orientation="left">解包已渲染的文件夹</Divider>
       <Paragraph>
