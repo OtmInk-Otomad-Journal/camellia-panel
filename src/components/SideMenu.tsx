@@ -48,11 +48,11 @@ const admin_list = [
 
 const auditor_list = [
   {
-    key: "/?type=ytpmv",
+    key: "/?type=ytpmv&dst=common",
     label: "YTPMV 数据",
   },
   {
-    key: "/?type=common",
+    key: "/?type=common&dst=ytpmv",
     label: "综合 数据",
   },
 ];

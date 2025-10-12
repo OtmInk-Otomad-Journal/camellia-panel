@@ -2,7 +2,12 @@
 import { useParams } from "react-router-dom";
 
 const searchParams = new URLSearchParams(window.location.search);
-const type = searchParams.get("type");
+var type = searchParams.get("type");
+var dst_type = searchParams.get("dst");
+if (type == "" || !type) {
+  type = "ytpmv";
+  dst_type = "common";
+}
 
 import { useEffect, useState } from "react";
 import {
@@ -22,6 +27,7 @@ import {
   Card,
   FormInstance,
   Popconfirm,
+  Empty,
 } from "antd";
 import { UploadOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import { get, post } from "../../common/api";
@@ -208,8 +214,32 @@ const ItemList = ({
   field: FormListFieldData;
   remove: (index: number | number[]) => void;
 }) => {
+  const [messageApi, contextHolder] = message.useMessage();
+  const form = Form.useFormInstance();
+  const moveData = (index: number) => {
+    get(
+      "/backend/trans-data?last_change=" +
+        form.getFieldValue("last_change") +
+        "&src_type=" +
+        type +
+        "&dst_type=" +
+        dst_type +
+        "&index=" +
+        index
+    )()
+      .then((_) => {
+        messageApi.success("已提交数据");
+        window.location.reload();
+      })
+      .catch((reason) => {
+        {
+          messageApi.error("数据提交失败，" + reason);
+        }
+      });
+  };
   return (
     <>
+      {contextHolder}
       <Collapse
         size="large"
         items={[
@@ -243,6 +273,22 @@ const ItemList = ({
                     }}
                   >
                     删除
+                  </Button>
+                </Popconfirm>
+                <Popconfirm
+                  title="移动稿件到对面榜单"
+                  description="你确定要移动这个稿件到对面榜单吗？"
+                  onConfirm={async () => await moveData(field.name)}
+                  okText="确认"
+                  cancelText="取消"
+                >
+                  <Button
+                    style={{
+                      position: "absolute",
+                      right: 130,
+                    }}
+                  >
+                    移动到对面
                   </Button>
                 </Popconfirm>
               </Flex>
