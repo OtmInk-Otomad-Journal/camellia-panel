@@ -1,4 +1,9 @@
 /* eslint-disable react/react-in-jsx-scope */
+import { useParams } from "react-router-dom";
+
+const searchParams = new URLSearchParams(window.location.search);
+const type = searchParams.get("type");
+
 import { useEffect, useState } from "react";
 import {
   Space,
@@ -59,8 +64,10 @@ const PanelInside = ({ field }: { field: FormListFieldData }) => {
   const scoreChange = () => {
     form.setFieldValue(
       ["items", field.name, "score"],
-      checkValueWithForm(form, field, "prescore") *
+      (
+        checkValueWithForm(form, field, "prescore") *
         checkValueWithForm(form, field, "adjust_scale")
+      ).toFixed(3)
     );
   };
 
@@ -263,7 +270,7 @@ const DataBox = () => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    get<DataType>("/backend/pull-data")().then((data) => {
+    get<DataType>("/backend/pull-data?type=" + type)().then((data) => {
       // setListData(data);
       form.setFieldValue("items", data.data);
       form.setFieldValue("last_change", data.last_change);
@@ -352,7 +359,7 @@ const ResortData = () => {
         last_change: form.getFieldValue("last_change"),
         data: form.getFieldValue("items"),
       };
-      post("/backend/save-data", data)()
+      post("/backend/save-data?type=" + type, data)()
         .then((_) => {
           messageApi.success("已提交数据");
           exitLoading(index);
@@ -544,10 +551,21 @@ const ComputeTool = () => {
   );
 };
 
+function switchWord(word: string) {
+  switch (word) {
+    case "ytpmv":
+      return "YTPMV";
+    case "common":
+      return "综合";
+    default:
+      return "未知";
+  }
+}
+
 export default function MainPage() {
   return (
     <>
-      <Title level={2}>审核 / 编辑数据</Title>
+      <Title level={2}>审核 / 编辑 {switchWord(type)} 数据</Title>
       <Paragraph>
         获取数据后，可以在这里审核并编辑数据；默认显示前 100 个。
       </Paragraph>

@@ -8,6 +8,7 @@ import {
   Space,
   Popconfirm,
   message,
+  Input,
 } from "antd";
 import {
   DeleteOutlined,
@@ -40,6 +41,8 @@ export default function MainPage() {
   const [dclip, setDClip] = useState("");
   const [clipdirlist, setClipDirList] = useState<ClipListType["files"]>([]);
   const [dir, setDir] = useState("");
+
+  const [vid, setVid] = useState("");
 
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -88,6 +91,18 @@ export default function MainPage() {
       });
   };
 
+  const removeVid = (filename: string) => {
+    get(`/backend/del-vid/${filename}`)()
+      .then((_) => {
+        messageApi.success("已删除对应视频");
+      })
+      .catch((_) => {
+        {
+          messageApi.error("删除时遇到了异常");
+        }
+      });
+  };
+
   const copyDir = (dirname: string) => {
     get(`/backend/unpack-clip-dir/${dirname}`)()
       .then((_) => {
@@ -97,6 +112,18 @@ export default function MainPage() {
       .catch((_) => {
         {
           messageApi.error("解包时遇到了异常");
+        }
+      });
+  };
+
+  const purgeWVC = () => {
+    get(`/backend/purge-wvc`)()
+      .then((_) => {
+        messageApi.success("已清理缓存");
+      })
+      .catch((_) => {
+        {
+          messageApi.error("遇到了异常");
         }
       });
   };
@@ -141,6 +168,29 @@ export default function MainPage() {
           </Button>
         </Popconfirm>
       </Space>
+      <Divider orientation="left">删除视频</Divider>
+      <Paragraph>
+        输入视频 av 号进行删除，包括 video 和 videoc 里的文件。
+      </Paragraph>
+      <Space size="middle">
+        <Input
+          onChange={(e) => {
+            setVid(e.target.value);
+          }}
+        />
+        <Popconfirm
+          title="删除文件"
+          description="你确定要删除这个视频吗？"
+          onConfirm={() => removeVid(vid)}
+          okText="确认"
+          cancelText="取消"
+        >
+          <Button type="primary" danger>
+            <DeleteOutlined />
+            删除文件
+          </Button>
+        </Popconfirm>
+      </Space>
       <Divider orientation="left">下载片段</Divider>
       <Paragraph>选择对应的片段进行下载。</Paragraph>
       <Space size="middle">
@@ -176,6 +226,14 @@ export default function MainPage() {
             解包文件夹
           </Button>
         </Popconfirm>
+      </Space>
+      <Divider orientation="left">清理渲染器缓存</Divider>
+      <Paragraph>如果需要清理缓存的情况，请清理渲染器缓存。</Paragraph>
+      <Space size="middle">
+        <Button type="primary" onClick={() => purgeWVC()} target="_blank">
+          <DeleteOutlined />
+          清理缓存
+        </Button>
       </Space>
     </>
   );

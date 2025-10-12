@@ -48,8 +48,12 @@ const admin_list = [
 
 const auditor_list = [
   {
-    key: "/",
-    label: "审核 / 编辑数据",
+    key: "/?type=ytpmv",
+    label: "YTPMV 数据",
+  },
+  {
+    key: "/?type=common",
+    label: "综合 数据",
   },
 ];
 
@@ -77,6 +81,7 @@ const SideMenu = () => {
       items={items}
       onClick={({ key }) => {
         navigate(key);
+        window.location.reload();
       }}
     />
   );

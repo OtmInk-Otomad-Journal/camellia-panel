@@ -7,6 +7,8 @@ import { UploadOutlined, DownloadOutlined } from "@ant-design/icons";
 
 const { Title, Paragraph } = Typography;
 
+const rank_types = ["ytpmv", "common"];
+
 export default function MainPage() {
   const [loadings, setLoadings] = useState<boolean[]>([false]);
 
@@ -30,34 +32,38 @@ export default function MainPage() {
   const sendData = (index: number) => {
     enterLoading(index);
     setTimeout(() => {
-      get("/backend/online-send-data")()
-        .then((_) => {
-          messageApi.success("已上传数据");
-          exitLoading(index);
-        })
-        .catch((_) => {
-          {
-            messageApi.error("上传数据时遇到了异常");
+      for (const rank_type of rank_types) {
+        get("/backend/online-send-data?type=" + rank_type)()
+          .then((_) => {
+            messageApi.success(`已上传${rank_type}数据`);
             exitLoading(index);
-          }
-        });
+          })
+          .catch((_) => {
+            {
+              messageApi.error(`上传${rank_type}数据时遇到了异常`);
+              exitLoading(index);
+            }
+          });
+      }
     }, 800);
   };
 
   const downloadData = (index: number) => {
     enterLoading(index);
     setTimeout(() => {
-      get("/backend/online-get-data")()
-        .then((_) => {
-          messageApi.success("已下载数据");
-          exitLoading(index);
-        })
-        .catch((_) => {
-          {
-            messageApi.error("下载数据时遇到了异常");
+      for (const rank_type of rank_types) {
+        get("/backend/online-get-data?type=" + rank_type)()
+          .then((_) => {
+            messageApi.success(`已下载${rank_type}数据`);
             exitLoading(index);
-          }
-        });
+          })
+          .catch((_) => {
+            {
+              messageApi.error(`下载${rank_type}数据时遇到了异常`);
+              exitLoading(index);
+            }
+          });
+      }
     }, 800);
   };
 
