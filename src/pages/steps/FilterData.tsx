@@ -207,6 +207,10 @@ const PanelInside = ({ field }: { field: FormListFieldData }) => {
   );
 };
 
+class GlobalState {
+  static actioned: boolean = false;
+}
+
 const ItemList = ({
   field,
   remove,
@@ -217,6 +221,10 @@ const ItemList = ({
   const [messageApi, contextHolder] = message.useMessage();
   const form = Form.useFormInstance();
   const moveData = (index: number) => {
+    if (GlobalState.actioned) {
+      messageApi.error("您执行过了操作，暂无法移动。请在上传数据后再移动！");
+      return;
+    }
     get(
       "/backend/trans-data?last_change=" +
         form.getFieldValue("last_change") +
@@ -261,7 +269,10 @@ const ItemList = ({
                 <Popconfirm
                   title="删除稿件"
                   description="你确定要删除这个稿件吗？"
-                  onConfirm={async () => await remove(field.name)}
+                  onConfirm={async () => {
+                    GlobalState.actioned = true;
+                    await remove(field.name);
+                  }}
                   okText="确认"
                   cancelText="取消"
                 >
@@ -277,7 +288,7 @@ const ItemList = ({
                 </Popconfirm>
                 <Popconfirm
                   title="移动稿件到对面榜单"
-                  description="你确定要移动这个稿件到对面榜单吗？"
+                  description="你确定要移动这个稿件到对面榜单吗？这会导致页面刷新！"
                   onConfirm={async () => await moveData(field.name)}
                   okText="确认"
                   cancelText="取消"
@@ -396,6 +407,7 @@ const ResortData = () => {
       });
       form.setFieldValue("items", data);
       exitLoading(index);
+      GlobalState.actioned = true;
     }, 800);
   };
   const sendData = (index: number) => {
@@ -409,6 +421,7 @@ const ResortData = () => {
         .then((_) => {
           messageApi.success("已提交数据");
           exitLoading(index);
+          GlobalState.actioned = false;
         })
         .catch((reason) => {
           {
