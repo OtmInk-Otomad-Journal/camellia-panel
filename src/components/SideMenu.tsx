@@ -26,7 +26,7 @@ const admin_list = [
   },
   {
     key: "/step5",
-    label: "下载视频资源",
+    label: "下载视频资源 / 划分表",
   },
   {
     key: "/step6",
