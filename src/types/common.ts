@@ -36,3 +36,16 @@ export type pickData = {
   picker: string;
   activity: string;
 };
+
+export type fetchData = {
+  id: number;
+  work: string;
+  reason: string;
+  anonymous: number;
+  bynote: null;
+  created_at: string;
+  updated_at: string;
+  nickname: string;
+  user_id: number;
+  bili_bound: number;
+};

@@ -18,7 +18,7 @@ const admin_list = [
   },
   {
     key: "/step3",
-    label: "上传 Pick Up 数据",
+    label: "上传嘉宾环节",
   },
   {
     key: "/step4",

@@ -3,7 +3,7 @@ import { useState, useEffect, Dispatch, SetStateAction } from "react";
 
 import jsonp from "jsonp";
 
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 import {
   Typography,
@@ -16,8 +16,9 @@ import {
   Switch,
   Steps,
   Flex,
+  DatePicker,
 } from "antd";
-import { pickData } from "../../types/common";
+import { fetchData, pickData } from "../../types/common";
 import { get, post } from "../../common/api";
 
 import {
@@ -28,6 +29,8 @@ import {
 } from "@ant-design/icons";
 
 const { Title, Paragraph } = Typography;
+
+const { RangePicker } = DatePicker;
 
 type workDataType = {
   owner: {
@@ -113,10 +116,10 @@ export default function MainPage() {
           setWorkData(response.data);
         } else {
           message.error(
-            `Error when fetching data Code=${response.code} Msg=${response.message}`
+            `Error when fetching data Code=${response.code} Msg=${response.message}`,
           );
         }
-      }
+      },
     );
   };
 
@@ -135,12 +138,32 @@ export default function MainPage() {
     });
   };
 
+  const [dateRange, setDateRange] = useState<[Dayjs, Dayjs]>([
+    dayjs().subtract(7, "day"),
+    dayjs(),
+  ]);
+
   useEffect(() => {
-    get<pickData[]>("/backend/pull-pickup-data")().then((data) => {
-      setListData(data);
-      getBili(data[current].aid);
+    const startTime = dateRange[0].format("YYYYMMDD");
+    const endTime = dateRange[1].format("YYYYMMDD");
+    get<fetchData[]>(
+      `/backend/pull-pickup-data?startTime=${startTime}&endTime=${endTime}`,
+    )().then((data) => {
+      let pickData = data.map((item) => {
+        return {
+          status: false,
+          aid: item.work,
+          reason: item.reason,
+          picker: item.nickname,
+          activity: "",
+        };
+      });
+      setListData(pickData);
+      if (data.length > 0) {
+        getBili(data[current].aid);
+      }
     });
-  }, []);
+  }, [dateRange]);
 
   return (
     <>
@@ -150,6 +173,15 @@ export default function MainPage() {
       <Paragraph>在所有数据均筛选完毕后，上传数据。</Paragraph>
       <UploadData />
       <Divider orientation="left">数据筛选</Divider>
+      <RangePicker
+        value={dateRange}
+        onChange={(dates) => {
+          if (dates && dates[0] && dates[1]) {
+            setDateRange([dates[0], dates[1]]);
+          }
+        }}
+        style={{ marginBottom: "20px" }}
+      />
       {listData.length > 0 && (
         <>
           <Card>
@@ -192,7 +224,7 @@ export default function MainPage() {
                       <Col>
                         <FieldTimeOutlined style={{ marginRight: 5 }} />
                         {dayjs(workData.pubdate * 1000).format(
-                          "YYYY-MM-DD HH:mm:ss"
+                          "YYYY-MM-DD HH:mm:ss",
                         )}
                       </Col>
                       <Col>

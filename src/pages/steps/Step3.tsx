@@ -40,8 +40,8 @@ export default function MainPage() {
 
   return (
     <>
-      <Title level={2}>上传 Pick Up 数据 / 嘉宾环节</Title>
-      <Paragraph>因技术开发成本有限，需要手动上传 Pick Up 文件。</Paragraph>
+      <Title level={2}>上传嘉宾环节</Title>
+      {/* <Paragraph>因技术开发成本有限，需要手动上传 Pick Up 文件。</Paragraph>
       <Divider orientation="left">从收集表下载文件</Divider>
       <Paragraph>
         请先前往收集表表格，将表格导出为 <b>.csv</b> 文件。
@@ -61,7 +61,7 @@ export default function MainPage() {
         <Button type="primary" icon={<UploadOutlined />}>
           上传文件 (.csv)
         </Button>
-      </Upload>
+      </Upload> */}
       <Divider orientation="left">上传嘉宾环节</Divider>
       <Paragraph>
         如果有，请在下面上传嘉宾环节的视频。该视频上传后，仅在本次合成中有效。
