@@ -56,7 +56,7 @@ const changeValueWF = (
   form: FormInstance<any>,
   field: FormListFieldData,
   attr: string,
-  value: string
+  value: string,
 ) => {
   form.setFieldValue(["items", field.name, attr], value);
 };
@@ -224,7 +224,7 @@ const CalendarBox = ({
           src={panel_prefix + "/" + (getValue(field, "cover") || "")}
         />
         <Space>
-          <ImgCrop aspect={1368 / 128}>
+          <ImgCrop aspect={823 / 217.42}>
             <Upload showUploadList={false} {...uploadTypes}>
               <Button>
                 <UploadOutlined /> 上传背景图
